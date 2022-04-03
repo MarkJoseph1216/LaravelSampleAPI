@@ -19,7 +19,7 @@
         "kreait/laravel-firebase": "^3.0",
         "laravel/framework": "^7.29",
         "laravel/tinker": "^2.5",
-        "ext-grpc": "1.38"
+        "ext-grpc": "*"
     },
     "require-dev": {
         "facade/ignition": "^2.0",
