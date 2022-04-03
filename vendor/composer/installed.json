@@ -2284,6 +2284,54 @@
             "install-path": "../hamcrest/hamcrest-php"
         },
         {
+            "name": "heroku/heroku-buildpack-php",
+            "version": "v213",
+            "version_normalized": "213.0.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/heroku/heroku-buildpack-php.git",
+                "reference": "a5acafd19b69670c03a128f275f231346a4cfdd3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/heroku/heroku-buildpack-php/zipball/a5acafd19b69670c03a128f275f231346a4cfdd3",
+                "reference": "a5acafd19b69670c03a128f275f231346a4cfdd3",
+                "shasum": ""
+            },
+            "time": "2022-03-17T22:04:03+00:00",
+            "bin": [
+                "bin/heroku-php-apache2",
+                "bin/heroku-php-nginx"
+            ],
+            "type": "library",
+            "installation-source": "dist",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "David Zuelke",
+                    "email": "dz@heroku.com"
+                }
+            ],
+            "description": "Toolkit for starting a PHP application locally, with or without foreman, using the same config for PHP and Apache2/Nginx as on Heroku",
+            "homepage": "https://github.com/heroku/heroku-buildpack-php",
+            "keywords": [
+                "apache",
+                "apache2",
+                "foreman",
+                "heroku",
+                "nginx",
+                "php"
+            ],
+            "support": {
+                "issues": "https://github.com/heroku/heroku-buildpack-php/issues",
+                "source": "https://github.com/heroku/heroku-buildpack-php/tree/v213"
+            },
+            "install-path": "../heroku/heroku-buildpack-php"
+        },
+        {
             "name": "kreait/clock",
             "version": "1.1.0",
             "version_normalized": "1.1.0.0",
@@ -9452,6 +9500,7 @@
         "fakerphp/faker",
         "filp/whoops",
         "hamcrest/hamcrest-php",
+        "heroku/heroku-buildpack-php",
         "mockery/mockery",
         "myclabs/deep-copy",
         "nunomaduro/collision",
