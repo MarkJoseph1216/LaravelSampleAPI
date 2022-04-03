@@ -1,31 +1,22 @@
-VENDOR_DIR=vendor
-GRPC_GATEWAY_REPO=github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis
-PROTOC_OPTION=-I. -I$(VENDOR_DIR) -I$(VENDOR_DIR)/$(GRPC_GATEWAY_REPO)
+all: helloworld/helloworld.pb.go helloworld/helloworld.pb.gw.go helloworld/helloworld.swagger.json
 
-.PHONY: install-glide
-install-glide:
-	go get github.com/Masterminds/glide
+helloworld/helloworld.pb.go: helloworld/helloworld.proto
+		protoc -I/usr/local/include -I helloworld\
+				-I$(GOPATH)/src \
+				-I$(GOPATH)/src/github.com/gengo/grpc-gateway/third_party/googleapis \
+				--go_out=Mgoogle/api/annotations.proto=github.com/gengo/grpc-gateway/third_party/googleapis/google/api,plugins=grpc:helloworld \
+				helloworld/helloworld.proto
 
-.PHONY: install-dep
-install-dep:
-	glide install
+helloworld/helloworld.pb.gw.go: helloworld/helloworld.proto
+		protoc -I/usr/local/include -I helloworld\
+				-I$(GOPATH)/src \
+				-I$(GOPATH)/src/github.com/gengo/grpc-gateway/third_party/googleapis \
+				 --grpc-gateway_out=logtostderr=true:helloworld \
+				helloworld/helloworld.proto
 
-.PHONY: install-commands
-install-commands:
-	go install ./vendor/github.com/golang/protobuf/protoc-gen-go
-	go install ./vendor/github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway
-#	go install ./vendor/github.com/lileio/lile
-
-proto/go:
-	rm -rf gen/go && mkdir -p gen/go
-	protoc -I/usr/local/include -I. \
-  		-I$(GOPATH)/src \
-  		-I$(VENDOR_DIR)/$(GRPC_GATEWAY_REPO) \
-  		--go_out=plugins=grpc:gen/go \
-  		echo/echo.proto
-
-proto/gateway:
-	#rm -rf gen/go && mkdir -p gen/go
-	protoc -I/usr/local/include -I. -I$(GOPATH)/src -I$(VENDOR_DIR)/$(GRPC_GATEWAY_REPO) \
-		--grpc-gateway_out=logtostderr=true:gen/go \
-		echo/echo.proto
+helloworld/helloworld.swagger.json: helloworld/helloworld.proto
+		protoc -I/usr/local/include -I helloworld\
+				-I$(GOPATH)/src \
+				-I$(GOPATH)/src/github.com/gengo/grpc-gateway/third_party/googleapis \
+				--swagger_out=logtostderr=true:helloworld \
+				helloworld/helloworld.proto
