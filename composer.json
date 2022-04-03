@@ -18,8 +18,7 @@
         "guzzlehttp/guzzle": "~6.0",
         "kreait/laravel-firebase": "^3.0",
         "laravel/framework": "^7.29",
-        "laravel/tinker": "^2.5",
-        "ext-grpc": "1.38"
+        "laravel/tinker": "^2.5"
     },
     "require-dev": {
         "facade/ignition": "^2.0",
