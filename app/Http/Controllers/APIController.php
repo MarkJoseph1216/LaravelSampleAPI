@@ -29,7 +29,7 @@ class APIController extends Controller
         ], 200);
     }
 
-    //Requesting content data from firebase.
+    //Requesting content data from firebase, Author: Mark Joseph, Date: 04/03/2022
     public function requestContentData(Request $request) {
         $data = app('firebase.firestore')->database()->collection($request->databaseName);
 
