@@ -29,8 +29,8 @@ class APIController extends Controller
         ], 200);
     }
 
-    //Requesting content data from firebase, Author: Mark Joseph, Date: 04/03/2022
-    //Google FireStore function.
+    // Requesting content data from firebase, Author: Mark Joseph, Date: 04/03/2022
+    // Google FireStore function.
     public function requestFireStoreData(Request $request) {
         $data = app('firebase.firestore')->database()->collection($request->databaseName);
 
@@ -47,14 +47,25 @@ class APIController extends Controller
         return response()->json(['contents' => $resultArray]);
     }
 
-    //Realtime Database function, Author: Mark Joseph, Date: 04/04/2022
+    // Realtime Database function, Author: Mark Joseph, Date: 04/04/2022
     public function requestDatabaseData(Request $request){
-        $newPost = getFirebaseDB()->getReference($request->databaseName);
+        
+        // Getting the firebase reference.
+        $fbRef = getFirebaseDB()->getReference($request->databaseName);
 
-        $snapshot = $newPost->getSnapshot()->getvalue();
+        $snapshot = $fbRef->getSnapshot()->getvalue();
+        $arrayObject = array();
 
-        $resultArray = json_decode(json_encode($snapshot, JSON_PRETTY_PRINT));
-        return response()->json(['contents' => $resultArray]);
+        foreach ((array) $snapshot as $document) {
+           array_push($arrayObject, $document); 
+        }
+
+        // Checking the data isExisting or not.
+        $resultArray = $snapshot == null ? "No content available for this title."
+        : json_decode(json_encode($arrayObject, JSON_PRETTY_PRINT));
+
+        // Returning JSON response with status code.
+        return response()->json(['contents' => $resultArray], $snapshot == null ? 404 : 200);
     }
 
     //Delete Method
