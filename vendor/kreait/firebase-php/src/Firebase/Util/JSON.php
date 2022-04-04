@@ -1,11 +1,8 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Kreait\Firebase\Util;
 
 use Kreait\Firebase\Exception\InvalidArgumentException;
-use Throwable;
 
 class JSON
 {
@@ -14,26 +11,25 @@ class JSON
      *
      * Shamelessly copied from Guzzle.
      *
-     * @internal
-     *
      * @see \GuzzleHttp\json_encode()
      *
-     * @param mixed $value The value being encoded
-     * @param int<0, max>|null $options JSON encode option bitmask
-     * @param int<1, max>|null $depth Set the maximum depth. Must be greater than zero
+     * @param mixed $value   The value being encoded
+     * @param int    $options JSON encode option bitmask
+     * @param int    $depth   Set the maximum depth. Must be greater than zero
      *
      * @throws InvalidArgumentException if the JSON cannot be encoded
+     *
+     * @return string
      */
-    public static function encode($value, ?int $options = null, ?int $depth = null): string
+    public static function encode($value, $options = 0, $depth = 512): string
     {
-        $options ??= 0;
-        $depth ??= 512;
-
-        try {
-            return \json_encode($value, JSON_THROW_ON_ERROR | $options, $depth);
-        } catch (Throwable $e) {
-            throw new InvalidArgumentException('json_encode error: '.$e->getMessage());
+        $json = \json_encode($value, $options, $depth);
+        if (JSON_ERROR_NONE !== json_last_error()) {
+            throw new InvalidArgumentException(
+                'json_encode error: '.json_last_error_msg());
         }
+
+        return $json;
     }
 
     /**
@@ -41,38 +37,34 @@ class JSON
      *
      * Shamelessly copied from Guzzle.
      *
-     * @internal
-     *
      * @see \GuzzleHttp\json_encode()
      *
      * @param string $json JSON data to parse
-     * @param bool|null $assoc When true, returned objects will be converted into associative arrays
-     * @param int<1, max>|null $depth User specified recursion depth
-     * @param int<0, max>|null $options Bitmask of JSON decode options
+     * @param bool $assoc  When true, returned objects will be converted into associative arrays
+     * @param int $depth User specified recursion depth
+     * @param int $options Bitmask of JSON decode options
      *
      * @throws \InvalidArgumentException if the JSON cannot be decoded
      *
      * @return mixed
      */
-    public static function decode(string $json, ?bool $assoc = null, ?int $depth = null, ?int $options = null)
+    public static function decode($json, $assoc = false, $depth = 512, $options = 0)
     {
-        $assoc ??= false;
-        $depth ??= 512;
-        $options ??= 0;
-
-        try {
-            return \json_decode($json, $assoc, $depth, JSON_THROW_ON_ERROR | $options);
-        } catch (Throwable $e) {
-            throw new InvalidArgumentException('json_decode error: '.$e->getMessage());
+        $data = \json_decode($json, $assoc, $depth, $options);
+        if (JSON_ERROR_NONE !== json_last_error()) {
+            throw new InvalidArgumentException(
+                'json_decode error: '.json_last_error_msg());
         }
+
+        return $data;
     }
 
     /**
      * Returns true if the given value is a valid JSON string.
      *
-     * @internal
-     *
      * @param mixed $value
+     *
+     * @return bool
      */
     public static function isValid($value): bool
     {
@@ -80,18 +72,8 @@ class JSON
             self::decode($value);
 
             return true;
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             return false;
         }
-    }
-
-    /**
-     * @internal
-     *
-     * @param mixed $value
-     */
-    public static function prettyPrint($value): string
-    {
-        return self::encode($value, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
     }
 }

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Kreait\Firebase\Database\Query\Filter;
 
 use Kreait\Firebase\Database\Query\Filter;
@@ -13,7 +11,7 @@ final class LimitToLast implements Filter
 {
     use ModifierTrait;
 
-    private int $limit;
+    private $limit;
 
     public function __construct(int $limit)
     {

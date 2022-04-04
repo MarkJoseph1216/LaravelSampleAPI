@@ -107,20 +107,15 @@ $responses = GuzzleHttp\Pool::batch($client, (function() use($posArgs, $client) 
 	},
 ]);
 
-$responses = GuzzleHttp\Promise\unwrap([
-	'eol' => $client->getAsync("http://php.net/eol.php"),
-	'sv' => $client->getAsync("http://php.net/supported-versions.php"),
-]);
-
-if(!preg_match_all("#<td>\s*([1-9]+\.[0-9]+)\s*</td>#m", $responses['eol']->getBody(), $matches)) {
-	throw new Exception('Could not parse eol.php');
-}
-$eol = array_combine($matches[1], array_fill(0, count($matches[1]), "eol")); // list of all release series that are EOL
-
-if(!preg_match_all('#<tr class="security">\s*<td>\s*<a href="/downloads.php[^"]+">(\d+\.\d+)#m', $responses['sv']->getBody(), $matches)) {
-	throw new Exception('Could not parse supported-versions.php');
-}
-$eol = array_merge($eol, array_combine($matches[1], array_fill(0, count($matches[1]), "security"))); // add list of all release series that are security only
+// load EOL info from bin/util/eol.php
+$eol = array_filter(array_map(function($eolDates) {
+	if(strtotime($eolDates[1]) < time())
+		return "eol";
+	elseif(strtotime($eolDates[0]) < time())
+		return "security";
+	else
+		return null; // will be removed by array_filter
+}, include(__DIR__ . "/../../bin/util/eol.php")));
 
 $packages = [];
 foreach($repositories as $repository) {
@@ -173,6 +168,13 @@ foreach($packages as $package) {
 				$insertExtension->bindValue(':bundled', 1, SQLITE3_INTEGER);
 				$insertExtension->bindValue(':enabled', !isset($package["extra"]["shared"][$rname]), SQLITE3_INTEGER);
 				$insertExtension->execute();
+			}
+		} elseif($package['type'] == 'heroku-sys-program' && $package['name'] == 'heroku-sys/composer') {
+			$serie = explode('.', $package['version']);
+			if($serie[0] == '2' && $serie[1] == '2') {
+				$serie = 'LTS 2.2'; // Composer 2.2 is LTS
+			} else {
+				$serie = $serie[0]; // 3, 4, 5 etc - semver major version
 			}
 		} else {
 			$serie = explode('.', $package['version'])[0]; // 3, 4, 5 etc - semver major version

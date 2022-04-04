@@ -4,38 +4,41 @@ declare(strict_types=1);
 
 namespace Kreait\Firebase\Auth;
 
+use Kreait\Firebase\Exception\AuthException;
+
 class UserInfo implements \JsonSerializable
 {
-    public ?string $uid = null;
-    public ?string $displayName = null;
-    public ?string $screenName = null;
-    public ?string $email = null;
-    public ?string $photoUrl = null;
-    public ?string $providerId = null;
-    public ?string $phoneNumber = null;
+    public $uid;
+    public $displayName;
+    public $email;
+    public $photoUrl;
+    public $providerId;
+    public $phoneNumber;
 
-    /**
-     * @param array<string, string> $data
-     */
     public static function fromResponseData(array $data): self
     {
+        if (!array_key_exists('providerId', $data) || !array_key_exists('rawId', $data)) {
+            throw new AuthException('Invalid user info');
+        }
+
         $info = new self();
-        $info->uid = $data['rawId'] ?? null;
+        $info->uid = $data['rawId'];
         $info->displayName = $data['displayName'] ?? null;
-        $info->screenName = $data['screenName'] ?? null;
         $info->email = $data['email'] ?? null;
         $info->photoUrl = $data['photoUrl'] ?? null;
-        $info->providerId = $data['providerId'] ?? null;
+        $info->providerId = $data['providerId'];
         $info->phoneNumber = $data['phoneNumber'] ?? null;
 
         return $info;
     }
 
-    /**
-     * @return array<string, string|null>
-     */
-    public function jsonSerialize(): array
+    public function toArray(): array
     {
-        return \get_object_vars($this);
+        return get_object_vars($this);
+    }
+
+    public function jsonSerialize()
+    {
+        return $this->toArray();
     }
 }

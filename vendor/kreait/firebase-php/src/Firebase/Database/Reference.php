@@ -1,11 +1,9 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Kreait\Firebase\Database;
 
 use Kreait\Firebase\Database\Reference\Validator;
-use Kreait\Firebase\Exception\DatabaseException;
+use Kreait\Firebase\Exception\ApiException;
 use Kreait\Firebase\Exception\InvalidArgumentException;
 use Kreait\Firebase\Exception\OutOfRangeException;
 use Psr\Http\Message\UriInterface;
@@ -18,18 +16,32 @@ use Psr\Http\Message\UriInterface;
  */
 class Reference
 {
-    private UriInterface $uri;
-
-    private ApiClient $apiClient;
-
-    private Validator $validator;
+    /**
+     * @var UriInterface
+     */
+    private $uri;
 
     /**
-     * @internal
+     * @var ApiClient
+     */
+    private $apiClient;
+
+    /**
+     * @var Validator
+     */
+    private $validator;
+
+    /**
+     * Creates a new Reference instance for the given URI which is accessed by
+     * the given API client and validated by the Validator (obviously).
+     *
+     * @param UriInterface $uri
+     * @param ApiClient $apiClient
+     * @param Validator|null $validator
      *
      * @throws InvalidArgumentException if the reference URI is invalid
      */
-    public function __construct(UriInterface $uri, ApiClient $apiClient, ?Validator $validator = null)
+    public function __construct(UriInterface $uri, ApiClient $apiClient, Validator $validator = null)
     {
         $this->validator = $validator ?? new Validator();
         $this->validator->validateUri($uri);
@@ -46,20 +58,24 @@ class Reference
      * The key of the root Reference is null.
      *
      * @see https://firebase.google.com/docs/reference/js/firebase.database.Reference#key
+     *
+     * @return string|null
      */
-    public function getKey(): ?string
+    public function getKey()
     {
-        $key = \basename($this->getPath());
+        $key = basename($this->getPath());
 
-        return $key !== '' ? $key : null;
+        return '' !== $key ? $key : null;
     }
 
     /**
      * Returns the full path to a reference.
+     *
+     * @return string
      */
     public function getPath(): string
     {
-        return \trim($this->uri->getPath(), '/');
+        return trim($this->uri->getPath(), '/');
     }
 
     /**
@@ -68,25 +84,31 @@ class Reference
      * @see https://firebase.google.com/docs/reference/js/firebase.database.Reference#parent
      *
      * @throws OutOfRangeException if requested for the root Reference
+     *
+     * @return Reference
      */
     public function getParent(): self
     {
         $parentPath = \dirname($this->getPath());
 
-        if ($parentPath === '.') {
+        if ('.' === $parentPath) {
             throw new OutOfRangeException('Cannot get parent of root reference');
         }
 
-        return new self($this->uri->withPath('/'.\ltrim($parentPath, '/')), $this->apiClient, $this->validator);
+        /* @noinspection ExceptionsAnnotatingAndHandlingInspection */
+        return new self($this->uri->withPath($parentPath), $this->apiClient, $this->validator);
     }
 
     /**
      * The root location of a Reference.
      *
      * @see https://firebase.google.com/docs/reference/js/firebase.database.Reference#root
+     *
+     * @return Reference
      */
     public function getRoot(): self
     {
+        /* @noinspection ExceptionsAnnotatingAndHandlingInspection */
         return new self($this->uri->withPath('/'), $this->apiClient, $this->validator);
     }
 
@@ -98,11 +120,15 @@ class Reference
      *
      * @see https://firebase.google.com/docs/reference/js/firebase.database.Reference#child
      *
+     * @param string $path
+     *
      * @throws InvalidArgumentException if the path is invalid
+     *
+     * @return Reference
      */
     public function getChild(string $path): self
     {
-        $childPath = \sprintf('/%s/%s', \trim($this->uri->getPath(), '/'), \trim($path, '/'));
+        $childPath = sprintf('%s/%s', trim($this->uri->getPath(), '/'), trim($path, '/'));
 
         try {
             return new self($this->uri->withPath($childPath), $this->apiClient, $this->validator);
@@ -115,9 +141,14 @@ class Reference
      * Generates a new Query object ordered by the specified child key.
      *
      * @see Query::orderByChild()
+     *
+     * @param string $path
+     *
+     * @return Query
      */
     public function orderByChild(string $path): Query
     {
+        /* @noinspection ExceptionsAnnotatingAndHandlingInspection */
         return $this->query()->orderByChild($path);
     }
 
@@ -125,9 +156,12 @@ class Reference
      * Generates a new Query object ordered by key.
      *
      * @see Query::orderByKey()
+     *
+     * @return Query
      */
     public function orderByKey(): Query
     {
+        /* @noinspection ExceptionsAnnotatingAndHandlingInspection */
         return $this->query()->orderByKey();
     }
 
@@ -135,9 +169,12 @@ class Reference
      * Generates a new Query object ordered by child values.
      *
      * @see Query::orderByValue()
+     *
+     * @return Query
      */
     public function orderByValue(): Query
     {
+        /* @noinspection ExceptionsAnnotatingAndHandlingInspection */
         return $this->query()->orderByValue();
     }
 
@@ -145,6 +182,10 @@ class Reference
      * Generates a new Query limited to the first specific number of children.
      *
      * @see Query::limitToFirst()
+     *
+     * @param int $limit
+     *
+     * @return Query
      */
     public function limitToFirst(int $limit): Query
     {
@@ -155,6 +196,10 @@ class Reference
      * Generates a new Query object limited to the last specific number of children.
      *
      * @see Query::limitToLast()
+     *
+     * @param int $limit
+     *
+     * @return Query
      */
     public function limitToLast(int $limit): Query
     {
@@ -162,11 +207,13 @@ class Reference
     }
 
     /**
-     * Creates a Query with the specified starting point (inclusive).
+     * Creates a Query with the specified starting point.
      *
      * @see Query::startAt()
      *
-     * @param scalar $value
+     * @param int|float|string|bool $value $value
+     *
+     * @return Query
      */
     public function startAt($value): Query
     {
@@ -174,23 +221,13 @@ class Reference
     }
 
     /**
-     * Creates a Query with the specified starting point (exclusive).
-     *
-     * @see Query::startAfter()
-     *
-     * @param scalar $value
-     */
-    public function startAfter($value): Query
-    {
-        return $this->query()->startAfter($value);
-    }
-
-    /**
-     * Creates a Query with the specified ending point (inclusive).
+     * Creates a Query with the specified ending point.
      *
      * @see Query::endAt()
      *
-     * @param scalar $value
+     * @param int|float|string|bool $value
+     *
+     * @return Query
      */
     public function endAt($value): Query
     {
@@ -198,23 +235,13 @@ class Reference
     }
 
     /**
-     * Creates a Query with the specified ending point (exclusive).
-     *
-     * @see Query::endBefore()
-     *
-     * @param scalar $value
-     */
-    public function endBefore($value): Query
-    {
-        return $this->query()->endBefore($value);
-    }
-
-    /**
      * Creates a Query which includes children which match the specified value.
      *
      * @see Query::equalTo()
      *
-     * @param scalar $value
+     * @param int|float|string|bool $value
+     *
+     * @return Query
      */
     public function equalTo($value): Query
     {
@@ -225,6 +252,8 @@ class Reference
      * Creates a Query with shallow results.
      *
      * @see Query::shallow()
+     *
+     * @return Query
      */
     public function shallow(): Query
     {
@@ -235,25 +264,26 @@ class Reference
      * Returns the keys of a reference's children.
      *
      * @throws OutOfRangeException if the reference has no children with keys
-     * @throws DatabaseException if the API reported an error
+     * @throws ApiException if the API reported an error
      *
      * @return string[]
      */
     public function getChildKeys(): array
     {
+        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $snapshot = $this->shallow()->getSnapshot();
 
         if (\is_array($value = $snapshot->getValue())) {
-            return \array_map('strval', \array_keys($value));
+            return array_keys($value);
         }
 
-        throw new OutOfRangeException(\sprintf('%s has no children with keys', $this));
+        throw new OutOfRangeException(sprintf('%s has no children with keys', $this));
     }
 
     /**
      * Convenience method for {@see getSnapshot()}->getValue().
      *
-     * @throws DatabaseException if the API reported an error
+     * @throws ApiException if the API reported an error
      *
      * @return mixed
      */
@@ -272,15 +302,13 @@ class Reference
      *
      * @param mixed $value
      *
-     * @throws DatabaseException if the API reported an error
+     * @throws ApiException if the API reported an error
+     *
+     * @return Reference
      */
     public function set($value): self
     {
-        if ($value === null) {
-            $this->apiClient->remove($this->uri);
-        } else {
-            $this->apiClient->set($this->uri, $value);
-        }
+        $this->apiClient->set($this->uri, $value);
 
         return $this;
     }
@@ -288,7 +316,9 @@ class Reference
     /**
      * Returns a data snapshot of the current location.
      *
-     * @throws DatabaseException if the API reported an error
+     * @throws ApiException if the API reported an error
+     *
+     * @return Snapshot
      */
     public function getSnapshot(): Snapshot
     {
@@ -312,19 +342,18 @@ class Reference
      *
      * @see https://firebase.google.com/docs/reference/js/firebase.database.Reference#push
      *
-     * @param mixed|null $value
+     * @param mixed $value
      *
-     * @throws DatabaseException if the API reported an error
+     * @throws ApiException if the API reported an error
      *
      * @return Reference A new reference for the added child
      */
     public function push($value = null): self
     {
-        $value ??= [];
-
         $newKey = $this->apiClient->push($this->uri, $value);
-        $newPath = \sprintf('%s/%s', $this->uri->getPath(), $newKey);
+        $newPath = sprintf('%s/%s', $this->uri->getPath(), $newKey);
 
+        /* @noinspection ExceptionsAnnotatingAndHandlingInspection */
         return new self($this->uri->withPath($newPath), $this->apiClient, $this->validator);
     }
 
@@ -335,7 +364,7 @@ class Reference
      *
      * @see https://firebase.google.com/docs/reference/js/firebase.database.Reference#remove
      *
-     * @throws DatabaseException if the API reported an error
+     * @throws ApiException if the API reported an error
      *
      * @return Reference A new instance for the now empty Reference
      */
@@ -360,9 +389,11 @@ class Reference
      *
      * @see https://firebase.google.com/docs/reference/js/firebase.database.Reference#update
      *
-     * @param array<mixed> $values
+     * @param array $values
      *
-     * @throws DatabaseException if the API reported an error
+     * @throws ApiException if the API reported an error
+     *
+     * @return Reference
      */
     public function update(array $values): self
     {
@@ -383,6 +414,8 @@ class Reference
      * you will get a permission-denied error.
      *
      * @see https://firebase.google.com/docs/reference/js/firebase.database.Reference#toString
+     *
+     * @return UriInterface
      */
     public function getUri(): UriInterface
     {
@@ -393,14 +426,18 @@ class Reference
      * Returns the absolute URL for this location.
      *
      * @see getUri()
+     *
+     * @return string
      */
-    public function __toString(): string
+    public function __toString()
     {
         return (string) $this->getUri();
     }
 
     /**
      * Returns a new query for the current reference.
+     *
+     * @return Query
      */
     private function query(): Query
     {

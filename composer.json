@@ -12,11 +12,9 @@
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
         "google/cloud": "^0.176.0",
-        "google/cloud-firestore": "^1.21",
         "google/gax": "^1.9",
-        "grpc/grpc": "1.38",
         "guzzlehttp/guzzle": "~6.0",
-        "kreait/laravel-firebase": "^3.0",
+        "kreait/firebase-php": "4.0",
         "laravel/framework": "^7.29",
         "laravel/tinker": "^2.5"
     },

@@ -22,5 +22,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 //Post Method
 Route::post('/details',[APIController::class, 'requestGuestBook']);
 
-// Get Method
-Route::post('/data',[APIController::class, 'requestContentData']);
+// Firebase Firestore
+// Route::post('/data',[APIController::class, 'requestFireStoreData']);
+
+// Firebase Realtime Database
+Route::post('/data',[APIController::class, 'requestDatabaseData']);

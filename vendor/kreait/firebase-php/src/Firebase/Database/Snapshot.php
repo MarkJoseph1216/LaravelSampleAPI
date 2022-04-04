@@ -1,10 +1,8 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Kreait\Firebase\Database;
 
-use function JmesPath\search;
+use JmesPath;
 use Kreait\Firebase\Exception\InvalidArgumentException;
 
 /**
@@ -23,16 +21,16 @@ use Kreait\Firebase\Exception\InvalidArgumentException;
  */
 class Snapshot
 {
-    private Reference $reference;
-
-    /** @var mixed mixed */
-    private $value;
+    /**
+     * @var Reference
+     */
+    private $reference;
 
     /**
-     * @internal
-     *
-     * @param mixed $value
+     * @var mixed
      */
+    private $value;
+
     public function __construct(Reference $reference, $value)
     {
         $this->reference = $reference;
@@ -48,8 +46,10 @@ class Snapshot
      * will return null.
      *
      * @see https://firebase.google.com/docs/reference/js/firebase.database.DataSnapshot#key
+     *
+     * @return string|null
      */
-    public function getKey(): ?string
+    public function getKey()
     {
         return $this->reference->getKey();
     }
@@ -58,6 +58,8 @@ class Snapshot
      * Returns the Reference for the location that generated this Snapshot.
      *
      * @see https://firebase.google.com/docs/reference/js/firebase.database.DataSnapshot#ref
+     *
+     * @return Reference
      */
     public function getReference(): Reference
     {
@@ -74,14 +76,18 @@ class Snapshot
      *
      * @see https://firebase.google.com/docs/reference/js/firebase.database.DataSnapshot#child
      *
+     * @param string $path
+     *
      * @throws InvalidArgumentException if the given child path is invalid
+     *
+     * @return Snapshot
      */
     public function getChild(string $path): self
     {
-        $path = \trim($path, '/');
-        $expression = '"'.\str_replace('/', '"."', $path).'"';
+        $path = trim($path, '/');
+        $expression = str_replace('/', '.', $path);
 
-        $childValue = search($expression, $this->value);
+        $childValue = JmesPath\search($expression, $this->value);
 
         return new self($this->reference->getChild($path), $childValue);
     }
@@ -92,23 +98,29 @@ class Snapshot
      * It is a convenience method for `$snapshot->getValue() !== null`.
      *
      * @see https://firebase.google.com/docs/reference/js/firebase.database.DataSnapshot#exists
+     *
+     * @return bool
      */
     public function exists(): bool
     {
-        return $this->value !== null;
+        return null !== $this->value;
     }
 
     /**
      * Returns true if the specified child path has (non-null) data.
      *
      * @see https://firebase.google.com/docs/reference/js/firebase.database.DataSnapshot#hasChild
+     *
+     * @param string $path
+     *
+     * @return bool
      */
     public function hasChild(string $path): bool
     {
-        $path = \trim($path, '/');
-        $expression = '"'.\str_replace('/', '"."', $path).'"';
+        $path = trim($path, '/');
+        $expression = str_replace('/', '.', $path);
 
-        return search($expression, $this->value) !== null;
+        return null !== JmesPath\search($expression, $this->value);
     }
 
     /**
@@ -120,16 +132,20 @@ class Snapshot
      * it is empty (in which case {@see getValue()} will return null).
      *
      * @see https://firebase.google.com/docs/reference/js/firebase.database.DataSnapshot#hasChildren
+     *
+     * @return bool
      */
     public function hasChildren(): bool
     {
-        return \is_array($this->value) && !empty($this->value);
+        return \is_array($this->value) && \count($this->value);
     }
 
     /**
      * Returns the number of child properties of this Snapshot.
      *
      * @see https://firebase.google.com/docs/reference/js/firebase.database.DataSnapshot#numChildren
+     *
+     * @return int
      */
     public function numChildren(): int
     {

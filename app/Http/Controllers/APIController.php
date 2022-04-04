@@ -30,7 +30,8 @@ class APIController extends Controller
     }
 
     //Requesting content data from firebase, Author: Mark Joseph, Date: 04/03/2022
-    public function requestContentData(Request $request) {
+    //Google FireStore function.
+    public function requestFireStoreData(Request $request) {
         $data = app('firebase.firestore')->database()->collection($request->databaseName);
 
         $documents = $data->documents();
@@ -43,6 +44,16 @@ class APIController extends Controller
         }
 
         $resultArray = json_decode(json_encode($arrayObject, JSON_PRETTY_PRINT));
+        return response()->json(['contents' => $resultArray]);
+    }
+
+    //Realtime Database function, Author: Mark Joseph, Date: 04/04/2022
+    public function requestDatabaseData(Request $request){
+        $newPost = getFirebaseDB()->getReference($request->databaseName);
+
+        $snapshot = $newPost->getSnapshot()->getvalue();
+
+        $resultArray = json_decode(json_encode($snapshot, JSON_PRETTY_PRINT));
         return response()->json(['contents' => $resultArray]);
     }
 

@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '290e9366a1070516297d74744abc42b0dfae13b5',
+        'reference' => '3811675ed298661edbe91a806aa6cd621d3895c2',
         'name' => 'laravel/laravel',
         'dev' => true,
     ),
@@ -938,12 +938,12 @@
             'dev_requirement' => false,
         ),
         'grpc/grpc' => array(
-            'pretty_version' => '1.38.0',
-            'version' => '1.38.0.0',
+            'pretty_version' => '1.42.0',
+            'version' => '1.42.0.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../grpc/grpc',
             'aliases' => array(),
-            'reference' => 'e1687963fb0b087d0c70e75d3bfff9062eaeb215',
+            'reference' => '9fa44f104cb92e924d4da547323a97f3d8aca6d4',
             'dev_requirement' => false,
         ),
         'guzzlehttp/guzzle' => array(
@@ -983,12 +983,12 @@
             'dev_requirement' => true,
         ),
         'heroku/heroku-buildpack-php' => array(
-            'pretty_version' => 'v213',
-            'version' => '213.0.0.0',
+            'pretty_version' => 'v214',
+            'version' => '214.0.0.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../heroku/heroku-buildpack-php',
             'aliases' => array(),
-            'reference' => 'a5acafd19b69670c03a128f275f231346a4cfdd3',
+            'reference' => 'e9e279e2c00561fba55630b935616b7f8c363073',
             'dev_requirement' => true,
         ),
         'illuminate/auth' => array(
@@ -1181,12 +1181,12 @@
             'dev_requirement' => false,
         ),
         'kreait/firebase-php' => array(
-            'pretty_version' => '5.26.1',
-            'version' => '5.26.1.0',
+            'pretty_version' => '4.0.0',
+            'version' => '4.0.0.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../kreait/firebase-php',
             'aliases' => array(),
-            'reference' => '291d4e613e86aaa8085aaf42d3b5dcb66ebfdbf2',
+            'reference' => 'dd5d0314332c8f0027054d550d403d21c0d56507',
             'dev_requirement' => false,
         ),
         'kreait/firebase-tokens' => array(
@@ -1196,15 +1196,6 @@
             'install_path' => __DIR__ . '/../kreait/firebase-tokens',
             'aliases' => array(),
             'reference' => '595ad06cb5f75c188d8fbfdefc9078c3ec8aa5e8',
-            'dev_requirement' => false,
-        ),
-        'kreait/laravel-firebase' => array(
-            'pretty_version' => '3.4.0',
-            'version' => '3.4.0.0',
-            'type' => 'library',
-            'install_path' => __DIR__ . '/../kreait/laravel-firebase',
-            'aliases' => array(),
-            'reference' => 'e2110842cb08e48642116e2a9b719c81c80c83be',
             'dev_requirement' => false,
         ),
         'laravel/framework' => array(
@@ -1222,7 +1213,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '290e9366a1070516297d74744abc42b0dfae13b5',
+            'reference' => '3811675ed298661edbe91a806aa6cd621d3895c2',
             'dev_requirement' => false,
         ),
         'laravel/tinker' => array(
@@ -1234,22 +1225,13 @@
             'reference' => 'dff39b661e827dae6e092412f976658df82dbac5',
             'dev_requirement' => false,
         ),
-        'lcobucci/clock' => array(
-            'pretty_version' => '2.0.0',
-            'version' => '2.0.0.0',
-            'type' => 'library',
-            'install_path' => __DIR__ . '/../lcobucci/clock',
-            'aliases' => array(),
-            'reference' => '353d83fe2e6ae95745b16b3d911813df6a05bfb3',
-            'dev_requirement' => false,
-        ),
         'lcobucci/jwt' => array(
-            'pretty_version' => '4.1.5',
-            'version' => '4.1.5.0',
+            'pretty_version' => '3.4.6',
+            'version' => '3.4.6.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../lcobucci/jwt',
             'aliases' => array(),
-            'reference' => 'fe2d89f2eaa7087af4aa166c6f480ef04e000582',
+            'reference' => '3ef8657a78278dfeae7707d51747251db4176240',
             'dev_requirement' => false,
         ),
         'league/commonmark' => array(
@@ -1477,12 +1459,6 @@
             'reference' => 'd11b50ad223250cf17b86e38383413f5a6764bf8',
             'dev_requirement' => false,
         ),
-        'psr/cache-implementation' => array(
-            'dev_requirement' => false,
-            'provided' => array(
-                0 => '1.0|2.0',
-            ),
-        ),
         'psr/container' => array(
             'pretty_version' => '1.1.2',
             'version' => '1.1.2.0',
@@ -1553,12 +1529,6 @@
             'reference' => '408d5eafb83c57f6365a3ca330ff23aa4a5fa39b',
             'dev_requirement' => false,
         ),
-        'psr/simple-cache-implementation' => array(
-            'dev_requirement' => false,
-            'provided' => array(
-                0 => '1.0|2.0',
-            ),
-        ),
         'psy/psysh' => array(
             'pretty_version' => 'v0.11.2',
             'version' => '0.11.2.0',
@@ -1600,15 +1570,6 @@
             'replaced' => array(
                 0 => '4.2.3',
             ),
-        ),
-        'riverline/multipart-parser' => array(
-            'pretty_version' => '2.0.9',
-            'version' => '2.0.9.0',
-            'type' => 'library',
-            'install_path' => __DIR__ . '/../riverline/multipart-parser',
-            'aliases' => array(),
-            'reference' => 'ebba10245b5a6e03a673ff52c547d05029caedab',
-            'dev_requirement' => false,
         ),
         'rize/uri-template' => array(
             'pretty_version' => '0.3.4',
@@ -1771,30 +1732,6 @@
             'aliases' => array(),
             'reference' => '8a5d5072dca8f48460fce2f4131fcc495eec654c',
             'dev_requirement' => false,
-        ),
-        'symfony/cache' => array(
-            'pretty_version' => 'v5.4.7',
-            'version' => '5.4.7.0',
-            'type' => 'library',
-            'install_path' => __DIR__ . '/../symfony/cache',
-            'aliases' => array(),
-            'reference' => 'ba06841ed293fcaf79a592f59fdaba471f7c756c',
-            'dev_requirement' => false,
-        ),
-        'symfony/cache-contracts' => array(
-            'pretty_version' => 'v2.5.0',
-            'version' => '2.5.0.0',
-            'type' => 'library',
-            'install_path' => __DIR__ . '/../symfony/cache-contracts',
-            'aliases' => array(),
-            'reference' => 'ac2e168102a2e06a2624f0379bde94cd5854ced2',
-            'dev_requirement' => false,
-        ),
-        'symfony/cache-implementation' => array(
-            'dev_requirement' => false,
-            'provided' => array(
-                0 => '1.0|2.0',
-            ),
         ),
         'symfony/console' => array(
             'pretty_version' => 'v5.4.7',
@@ -2049,15 +1986,6 @@
             'install_path' => __DIR__ . '/../symfony/var-dumper',
             'aliases' => array(),
             'reference' => '294e9da6e2e0dd404e983daa5aa74253d92c05d0',
-            'dev_requirement' => false,
-        ),
-        'symfony/var-exporter' => array(
-            'pretty_version' => 'v5.4.7',
-            'version' => '5.4.7.0',
-            'type' => 'library',
-            'install_path' => __DIR__ . '/../symfony/var-exporter',
-            'aliases' => array(),
-            'reference' => '7eacaa588c9b27f2738575adb4a8457a80d9c807',
             'dev_requirement' => false,
         ),
         'theseer/tokenizer' => array(
