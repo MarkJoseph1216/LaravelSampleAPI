@@ -57,7 +57,9 @@ class APIController extends Controller
         $arrayObject = array();
 
         foreach ((array) $snapshot as $document) {
-           array_push($arrayObject, $document); 
+            if ($document != null) {
+                array_push($arrayObject, $document); 
+            }
         }
 
         // Checking the data isExisting or not.
