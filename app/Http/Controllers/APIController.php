@@ -51,7 +51,7 @@ class APIController extends Controller
     public function requestDatabaseData(Request $request){
         
         // Getting the firebase reference.
-        $fbRef = getFirebaseDB()->getReference($request->databaseName);
+        $fbRef = getFirebaseDB()->getReference($request->databaseName)->getChild($request->filterType);
 
         $snapshot = $fbRef->getSnapshot()->getvalue();
         $arrayObject = array();
