@@ -89,9 +89,9 @@ class APIController extends Controller
         $androidName = $request->input('androidname');
         $domainSwitch = $request->input('domainswitch');
         $apiStatus = $request->input('apistatus');
+        $retryDomain = $request->input('retryDomain');
 
-        //Sending request to jumpcode backend.
-        $res = sendRequest($androidName, $domainSwitch, $apiStatus);
+        $res = sendRequest($androidName, $domainSwitch, $apiStatus, $retryDomain);
 
         //Return data and code from jumpcode api.
         $responseData = $res->getBody()->getContents();

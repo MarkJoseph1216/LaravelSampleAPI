@@ -6,10 +6,10 @@ use Kreait\Firebase\Factory;
 use Kreait\Firebase\ServiceAccount;
 
 //Requesting to jumpcode backend.
-function sendRequest($androidName, $domainSwitch, $apiStatus) {
+function sendRequest($androidName, $domainSwitch, $apiStatus, $retryDomain) {
     $client = new Client();
 
-    $request = $client->request('POST', getBaseURL($domainSwitch ?: 1, $apiStatus), [  
+    $request = $client->request('POST', getBaseURL($domainSwitch, $apiStatus, $retryDomain), [  
         'form_params' => [
             'androidname' => $androidName
         ]
@@ -18,6 +18,7 @@ function sendRequest($androidName, $domainSwitch, $apiStatus) {
     return $request;
 }
 
+//Requesting on firebase content data.
 function getFirebaseDB(){
     $serviceAccount = ServiceAccount::fromJsonFile(__DIR__ . '/firebase-credentials.json');
 
