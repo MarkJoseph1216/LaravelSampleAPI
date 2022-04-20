@@ -8,6 +8,9 @@ class Constant {
 
    const DOMAIN2 = "cfzhenpin.com";
    const DOMAIN2_2 = "lihuimold.com";
+
+   const DOMAIN_TRX = "cfzhenpin.com";
+   const DOMAIN_TRX_2 = "lihuimold.com";
 }
 
 ?>

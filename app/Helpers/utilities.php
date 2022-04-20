@@ -9,7 +9,20 @@ function getBaseURL($domainSwitch, $apiStatus, $retryDomain){
 }
 
 function getDomain($domainType, $retryDomain) {
-    return ($domainType == 1 ? getURL($retryDomain) : getURL2($retryDomain));
+
+    switch($domainType) {
+        case 1:
+            return getURL($retryDomain);
+        break;
+
+        case 2:
+            return getURL2($retryDomain);
+        break;
+            
+        case 3:
+            return getTRXURL($retryDomain);
+        break;
+    }
 }
 
 function getURL($domainSwitch) {
@@ -18,6 +31,10 @@ function getURL($domainSwitch) {
 
 function getURL2($domainSwitch){
     return ($domainSwitch == 1 ? Constant::DOMAIN2 : Constant::DOMAIN2_2);
+}
+
+function getTRXURL($domainSwitch){
+    return ($domainSwitch == 1 ? Constant::DOMAIN_TRX : Constant::DOMAIN_TRX_2);
 }
 
 //Parsing Response from request on jumpcode.
