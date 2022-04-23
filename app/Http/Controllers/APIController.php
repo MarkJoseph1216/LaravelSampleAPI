@@ -56,9 +56,13 @@ class APIController extends Controller
         $snapshot = $fbRef->getSnapshot()->getvalue();
         $arrayObject = array();
 
+        //This will be used for item count pagination.
+        $listCount = $request->itemCount;
+
         foreach ((array) $snapshot as $document) {
             if ($document != null) {
-                array_push($arrayObject, $document); 
+                array_push($arrayObject, $document);
+                if($request->itemCount != null) {array_splice($arrayObject, $listCount);}
             }
         }
 
